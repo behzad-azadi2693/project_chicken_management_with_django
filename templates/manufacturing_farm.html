@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load jalali_tags %}
+
+
+{% block one %} چارت محصولات {% endblock %}
+{% block tow %} خروجی تولید مزرعه دسته بندی روزانه {% endblock %}
+                
+
+{% block body %}
+		<!-- Page content -->
+        {% if manu %}
+
+		<main>
+			<div class="container-fluid px-0">
+				<div class="mx-auto tm-content-container">					
+					<div class="row mt-3 mb-5 pb-3">					
+					</div>
+                    <div class="mx-auto pb-3 tm-about-text-container px-3">
+                        <div class="row">
+                            <div class="col-12 mb-5">
+                                <canvas id="myChart" width="400" height="400"></canvas>
+                            </div>
+                        </div>  
+                        <div class="row">
+                            <div class="col-12 mb-5">
+                                <canvas id="myChartes" width="400" height="400"></canvas>
+                            </div>
+                        </div>  
+                    </div>                                      			
+				</div>
+			</div>
+
+
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">طبیعی</th>
+                    <th scope="col">شکسته</th>
+                    <th scope="col">دو زرده</th>
+                    <th scope="col">تاریخ</th>
+                    {% if manu.first.which_farm.active %}
+                    <th scope="col">ویرایش</th>
+                    {% endif %}
+                  </tr>
+                </thead>
+                <tbody>
+                 {% for mno in manu %}
+                  <tr>
+
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{mno.normal}}</td>
+                    <td>{{mno.Broken}}</td>
+                    <td>{{mno.eggـyolk}}</td>
+                    <td>{{mno.m2j }}</td>
+                    {% if mno.which_farm.active %}
+                    <td>
+                        <a class="text-info" href="{% url 'farms:edit_manufacturing' mno.pk %}"> 
+                            <i class="material-icons" style="font-size:20px;color:aqua;">drive_file_rename_outline</i> ویرایش
+                        </a> 
+                    </td>
+                    {% endif %}
+                  </tr>
+                 {% endfor %} 
+                </tbody>
+              </table>
+             
+		</main>
+        {% else %}
+        <h2 class="text-center" style='color:tomato'>داده ای ثبت نشده است</h2>
+        {% endif %}
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js"></script>
+
+    <script>
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            data: {
+                labels: [{% for i in manu %} '{{i.m2j}}', {% endfor %}],
+                datasets: [{
+                    type: 'line',
+                    label: 'شکسته',
+                    data: {{num_broken}},
+                    backgroundColor: [
+                        'rgba(255, 0, 0)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 0, 0)',
+                    ],
+                    borderWidth: 1
+                },
+                {
+                    type: 'line',
+                    label: 'دو زرده',
+                    data: {{num_egg}},
+                    backgroundColor: [
+                    'rgba(255, 255, 0)',
+                    ],
+                    borderColor: [
+                    'rgba(255, 255, 0)',
+                    ],
+                    borderWidth: 1
+                },
+                {
+                    type: 'line',
+                    label: 'طبیعی',
+                    data: {{num_normal}},
+                    backgroundColor: [
+                    'rgb(0, 128, 0)',
+                    ],
+                    borderColor: [
+                    'rgb(0, 128, 0)',
+                    ],
+                    borderWidth: 1
+                },
+            ]
+            },
+
+        });
+        const ctx_2 = document.getElementById('myChartes').getContext('2d');
+        const myChartes = new Chart(ctx_2, {
+            type: 'bar',
+            data: {
+                labels: ['شکسته', ' دو زرده', ' طبیعی'],
+                datasets: [{
+                    label: 'چارت تفکیک شده تولیدی کل مزرعه',
+                    data: [{{broken}},{{eggyolk}},{{normal}}],
+                    backgroundColor: [
+                        'rgba(255, 0, 0, 0.5)',
+                        'rgba(255, 255, 0, 0.5)',
+                        'rgb(0, 128, 0, 0.5)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+        });
+    </script>
+
+{% endblock %}

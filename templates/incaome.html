@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load jalali_tags %}
+
+
+{% block one %} چارت فروش {% endblock %}
+{% block tow %} میزان فروش مزرعه {% endblock %}
+                
+
+{% block body %}
+		<!-- Page content -->
+        {% if incaomes %}
+
+		<main>
+			<div class="row">				
+                            <div class="col-5 m-5">
+                                <canvas id="myChartes" width="400" height="400"></canvas>
+                            </div>
+                            <div class="col-5 m-5">
+
+                                <canvas id="myChart" width="400" height="400"></canvas>
+                            </div>
+			</div>
+
+            <div class='col-12'>
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">نوع فروش</th>
+                    <th scope="col">مبلغ </th>
+                    <th scope="col">تاریخ</th>
+                    {% if incaomes.first.which_farm.active %}
+                    <th scope="col">ویرایش</th>
+                    {% endif %}
+                  </tr>
+                </thead>
+                <tbody>
+                 {% for inc in incaomes %}
+                  <tr>
+
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{inc.get_sell_display}}</td>
+                    <td>{{inc.price}}</td>
+                    <td>{{inc.m2j }}</td>
+                    {% if inc.which_farm.active %}
+                    <td>
+                        <a class="text-info" href="{% url 'farms:edit_incaome' inc.pk %}"> 
+                            <i class="material-icons" style="font-size:20px;color:aqua;">drive_file_rename_outline</i> ویرایش
+                        </a> 
+                    </td>
+                    {% endif %}
+                  </tr>
+                 {% endfor %} 
+                </tbody>
+              </table>
+             </div>
+		</main>
+        {% else %}
+        <h2 class="text-center" style='color:tomato'>داده ای ثبت نشده است</h2>
+        {% endif %}
+{% endblock %}
+
+{% block javascript %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js"></script>
+    <script>
+        const ctx_2 = document.getElementById('myChartes').getContext('2d');
+        const myChartes = new Chart(ctx_2, {
+            type: 'bar',
+            data: {
+                labels: ['کود', 'تخم مرغ'],
+                datasets: [{
+                    label: 'چارت تفکیک شده فروش کل مزرعه',
+                    data: [{{price_cood}},{{price_egg}}],
+                    backgroundColor: [
+                        'rgba(255, 0, 0, 0.5)',
+                        'rgba(255, 255, 0, 0.5)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+        });
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['کود', 'تخم مرغ'],
+                datasets: [{
+                    label: 'چارت تفکیک شده فروش کل مزرعه',
+                    data: [{{price_cood}},{{price_egg}}],
+                    backgroundColor: [
+                        'rgba(255, 0, 0, 0.5)',
+                        'rgba(255, 255, 0, 0.5)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+        });
+    </script>
+
+{% endblock %}

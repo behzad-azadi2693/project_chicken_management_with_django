@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load jalali_tags %}
+
+{% block one %} سیستم مدیریت آنلاین {% endblock %}
+{% block tow %}  
+            <br>صفحه مربوط به مدیریت
+            {% if all_medician %} بهداشت 
+            {% elif all_labratore %} آزمایشگاه 
+            {% elif profile %} محصول کاشت شده
+            {% elif vaccinations %} واکسیناسیون
+            {% elif schedules %} برنامه نوردهی
+            {% elif all_mak_bery %} مک بری کردن 
+            {% elif functions %}
+            {% endif %} 
+{% endblock %}
+
+{% block body %}
+		<div class="container-fluid tm-content-container mx-auto pt-4">
+			<!-- Subscribe form and footer links -->
+            <div class="row pt-3">
+            {% if all_medician %}
+                {% for mdc in all_medician %}
+                    <div class="col-xl-3 col-lg-12 mb-4">
+                        <div class="tm-bg-gray p-5">
+                            <h3 class="tm-text-primary mb-3">اطلاعات</h3>
+                            تاریخ بازدید:
+                            <a class="">{{ mdc.date|to_jalali:'%Y/%m/%d' }}</a> <hr> 
+                                {% if mdc.is_sickness %}
+                                <a class="text-danger">بیماری مشاهده شد</a> <hr>
+                                {% else %}
+                                <a class="text-success">وضعیت سفید است</a> <hr>
+                                {% endif %}
+                            <a class="text-info" href="{% url 'farms:add_image_to_medician' mdc.pk %}"> افزودن عکس های بالینی</a> <hr>
+                            <a class="text-info" href="{% url 'farms:all_image_medician' mdc.pk%}">مشاهده عکس های بالینی</a> <hr>
+                            <a class="text-info" href="{% url 'farms:edit_medician' mdc.pk %}"> 
+                                <i class="material-icons" style="font-size:60px;color:aqua;">drive_file_rename_outline</i> ویرایش
+                            </a> 
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 mb-4">
+                        <div class="p-5 tm-bg-gray h-100">
+                            <h3 class="tm-text-primary mb-4">مشخصات بیماری</h3>
+                            <p>{{ mdc.section_sickness }}</p>
+                        </div>                        
+                    </div>
+                
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 mb-4">
+                        <div class="p-5 tm-bg-gray h-100">
+                            <h3 class="tm-text-primary mb-4">دستورالعمل های درمانی</h3>
+                            <p>{{ mdc.treatmentـinstructions }}</p>
+                        </div>                        
+                    </div>
+                {% endfor %}
+            {% elif functions %}
+                {% for fun in functions %}
+                    <div class="col-xl-4 col-lg-12 mb-4">
+                        <div class="tm-bg-gray p-5">
+                            <h3 class="tm-text-primary mb-3">اطلاعات</h3>
+                            تاریخ شروع:
+                            <a class="">{{ fun.m2j}}</a> <hr> 
+                            ضریب وزن گیری
+                            <a>{{ fun.prduction_weight}} </a> <hr>
+                            ضریب تولید
+                            <a>{{ fun.production_coefficient }} </a> <hr> 
+                            {% if fun.which_farm.active %}
+                            <a class="text-info" href="{% url 'farms:edit_function' fun.pk %}"> 
+                                <i class="material-icons" style="font-size:60px;color:aqua;">drive_file_rename_outline</i> ویرایش
+                            </a> 
+                            {% endif %}
+                        </div>
+                    </div> 
+                {% endfor %}
+            {% elif all_mak_bery %}
+                {% for mak in all_mak_bery %}
+                    <div class="col-xl-3 col-lg-12 mb-4">
+                        <div class="tm-bg-gray p-5">
+                            <h3 class="tm-text-primary mb-3">اطلاعات</h3>
+                            تاریخ شروع:
+                            <a class="">{{ mak.m2j_start}}</a> <hr> 
+                            تاریخ پایان:
+                            <a class="">{{ mak.m2j_end }}</a> <hr>    
+                            {% if mak.which_farm.active %}
+                            <a class="text-info" href="{% url 'farms:edit_make_bery' mak.pk %}"> 
+                                <i class="material-icons" style="font-size:60px;color:aqua;">drive_file_rename_outline</i> ویرایش
+                            </a> 
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-xl-8 col-lg-12  mb-4">
+                        <div class="p-5 tm-bg-gray h-100">
+                            <h3 class="tm-text-primary mb-4">توضیحات </h3>
+                            <p>{{ mak.description }}</p>
+                        </div>                        
+                    </div>
+                {% endfor %}
+            {% elif vaccinations %}
+                {% for vac in vaccinations %}
+                    <div class="col-xl-3 col-lg-12 mb-4">
+                        <div class="tm-bg-gray p-5">
+                            <h3 class="tm-text-primary mb-3">اطلاعات</h3>
+                            تاریخ بازدید:
+                            <a class="">{{ vac.date_injection|to_jalali:'%Y/%m/%d' }}</a> <hr> 
+                                {% if vac.doing %}
+                                <a class="text-success">تزریق شده است</a> <hr>
+                                {% else %}
+                                <a class="text-warning">تزریق نشده است</a> <hr>
+                                {% endif %}
+                                <a> سن تجویز: {{ vac.ageـprescription }}</a> <hr>
+                                <a> نوع واکسن: {{ vac.typeـvaccine }}</a> <hr>
+                            {% if vac.which_farm.active %}
+                            <a class="text-info" href="{% url 'farms:edit_vaccination' vac.pk %}"> 
+                                <i class="material-icons" style="font-size:60px;color:aqua;">drive_file_rename_outline</i> ویرایش
+                            </a> 
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 mb-4">
+                        <div class="p-5 tm-bg-gray h-100">
+                            <h3 class="tm-text-primary mb-4">اطلاعات  ضروری</h3>
+                            <p>{{ vac.informationـRurry }}</p>
+                        </div>                        
+                    </div>
+                
+                    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 mb-4">
+                        <div class="p-5 tm-bg-gray h-100">
+                            <h3 class="tm-text-primary mb-4">روش تجویز</h3>
+                            <p>{{ vac.prescriptionـmethod }}</p>
+                        </div>                        
+                    </div>
+                {% endfor %}
+            {% elif schedules %}
+                {% for sch in schedules %}
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-4">
+                        <div class="p-5 tm-bg-gray h-100">
+                            <h3 class="tm-text-primary mb-4">اطلاعات  {{ forloop.counter }}</h3>
+                            توضیحات
+                            <p>{{ sch.description }}</p> <hr>
+                            {% if sch.which_farm.active %}
+                            <a href="{% url 'farms:edit_schedule' sch.pk %}">
+                                <i class="material-icons" style="font-size:60px;color:aqua;">drive_file_rename_outline</i> ویرایش
+                            </a>
+                            {% endif %}
+                        </div>                        
+                    </div>
+                {% endfor %}
+            {% elif all_labratore %}
+                {% for lab in all_labratore %}
+                    <div class="col-xl-3 col-lg-12 mb-4">
+                        <div class="tm-bg-gray p-5">
+                            <h3 class="tm-text-primary mb-3">اطلاعات</h3>
+                            تاریخ آزمایش:
+                            <a class="">{{ lab.date|to_jalali:'%Y/%m/%d' }}</a> <hr> 
+                            <a class="text-info" href="{% url 'farms:add_image_to_labratore' lab.pk %}"> افزودن عکس های آزمایشات</a> <hr>
+                            <a class="text-info" href="{% url 'farms:all_image_labratore' lab.pk%}">مشاهده عکس های آزمایشات</a> <hr>
+                            {% if lab.which_farm.active %}
+                            <a class="text-info" href="{% url 'farms:edit_labratore' lab.pk %}"> 
+                                <i class="material-icons" style="font-size:60px;color:aqua;">drive_file_rename_outline</i> ویرایش
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 col-12 mb-4">
+                        <div class="p-5 tm-bg-gray h-100">
+                            <h3 class="tm-text-primary mb-4">نتایج بررسی آزمایش</h3>
+                            <p>{{ lab.descriptor }}</p>
+                        </div>                        
+                    </div>
+                {% endfor %}
+            {% elif profile %}
+                <div class="col-12 mb-4">
+                    <div class="card w-100">
+                        <div class="card-body">
+                          <h3 class="card-title text-center">اطلاعات محصول</h3>
+                          مبدا
+                          <p class="card-text">{{ profile.origin }}</p> <hr>
+                          تعداد
+                          <p class="card-text">{{ profile.number }}</p> <hr>
+                          نژاد
+                          <p class="card-text">{{ profile.breeds }}</p> <hr>
+                          سن ورود به مزرعه
+                          <p class="card-text">{{ profile.age_into_farm }}</p> <hr>
+                          زمان ورود به مزرعه
+                          <p class="card-text">{{ profile.time_into_farm }}</p> <hr>
+                          {{  profile.which_farm.active }}
+                        {% if profile.which_farm.active %}
+                          <a href="{% url 'farms:edit_profilechicken' profile.pk %}" > 
+                            <i class="material-icons" style="font-size:60px;color:aqua;">drive_file_rename_outline</i> ویرایش محصول
+                          </a>
+                        {% endif %}
+                        </div>
+                      </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <h1 class="text-center" style='color:tomato'>هیچگونه داده ای ثبت نگردیده است</h1>
+                </div>
+            {% endif %}
+            </div> <!-- row -->
+		</div>		
+{% endblock %}
+
+{% block javascript %}
+
+    <script src="{% static 'admin/js/django_jalali.min.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block one %} سیستم مدیریت آنلاین{% endblock %}   
+{% block tow %} صفحه مربوط به مدیریت مزرعه {{farm.name_type}} {% endblock %}
+
+{%block body%}
+		<!-- Page content -->
+		<main>
+			<div class="container-fluid px-0">
+				<div class="row">
+
+                    <div class="col-md-10 col-sm-12">
+                        <div class="row">
+                            <div class="card-group mb-5 px-5 pt-5">
+
+                                <div class="card col-12" style="width: 38rem;">
+                                    <div class="card-header text-center">
+                                      مشخصات مزرعه
+                                    </div>
+                                    <ul class="list-group list-group-flush text-right">
+                                      :نام<li class="list-group-item tm-bg-black">{{farm.name_type}} </li>
+                                      :نوع<li class="list-group-item tm-bg-black" >{{farm.unitـtype}} </li>
+                                      :آدرس<li class="list-group-item tm-bg-black">{{farm.address}}</li>
+                                      :ظرفیت<li class="list-group-item tm-bg-black">{{farm.Capacity}}</li>
+                                      :نوع دانخوری<li class="list-group-item tm-bg-black">{{farm.Typeـofـfood}} </li>
+                                      :نوع آب خوری<li class="list-group-item tm-bg-black">{{farm.Type_of_water}}</li>
+                                      :سیستم تهویه<li class="list-group-item tm-bg-black">{{farm.ventilation_system}}</li>
+                                      :تاریخ<li class="list-group-item tm-bg-black">{{farm.m2j}}</li>
+                                      :وضعیت<li class="list-group-item tm-bg-black">
+                                          {% if farm.active %}
+                                            <span style="color: green;">مزرعه فعال است</span>
+                                          {%else%}
+                                            <span style="color: red;">مزرعه فعال نیست</span>
+                                          {%endif%}
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="card col-12" style="width: 38rem;">
+                                    <div class="card-header text-center">
+                                      مشخصات تماس
+                                    </div>
+                                    <ul class="list-group list-group-flush text-right">
+                                        {% for person in manage %}
+                                           جایگاه :{{person.get_individualـposition_display}}
+                                           <li class="list-group-item tm-bg-black">
+                                           نام:{{person.name}}------تلفن:<a style="color: wheat;" href="tel:{{person.phone_number}}">{{person.phone_number}}</a>
+                                            <a href="{% url 'farms:edit_manage' person.pk %}">
+                                                <i class="material-icons" style="font-size:20px;color:rgb(0, 255, 149);">drive_file_rename_outline</i>                                            </a>
+                                        </li>
+                                        :آدرس<li class="list-group-item tm-bg-black">{{person.address}}</li>
+                                        <hr>
+                                        {%endfor%}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+				        <div class="mx-auto tm-content-container mt-4 px-3 mb-3">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h2 class="tm-page-title mb-5 tm-text-primary" style="text-align: center;">ملزومات هر  مزرعه</h2>    
+                                </div>                        
+                            </div>
+				        	<div class="row">
+		                        <div class="col-lg-6 mb-5 pt-3">
+		                            <div class="media tm-testimonial">
+                                        <img class="mr-4 col-4 rounded-circle img-fluid" src="{% static 'img/vaccination.jpg' %}" alt="Generic placeholder image">
+                                        <p class="media-body pt-3 tm-testimonial-text text-justify">
+                                            برنامه واکسیناسیون مزرعه با توجه به نوع واکسن ,سن تجویز ,تاریخ تزریق ,روش تجویز و اطلاعات ضروری
+                                            <br>
+                                            <a href="{% url 'farms:vaccinations' farm.pk %}"><i class="material-icons" style="font-size:60px;color:aquamarine;">visibility</i></a> 
+                                        </p>                              
+                                    </div>              
+		                        </div>
+		                        <div class="col-lg-6 mb-5 pt-3">
+                                      <div class="media tm-testimonial">
+                                      <img class="mr-4 rounded-circle col-4 img-fluid" src="{% static 'img/chart.png' %}" alt="Generic placeholder image">
+                                      <p class="media-body pt-3 tm-testimonial-text text-justify">
+                                        خروجی تولید مزرعه دسته بندی روزانه و چارت نمایش مزرعه دسته بندی در سالم, ۲زرده, شکسته
+                                        <br>
+                                        <a href="{% url 'farms:manufacturing_farm' farm.pk %}"><i class="material-icons" style="font-size:60px;color:aquamarine;">visibility</i></a>
+                                    </p>
+                                    </div>                                    
+                                </div>
+                                <div class="col-lg-6 mb-5 pt-3">
+                                    <div class="media tm-testimonial">
+                                      <img class="mr-4 col-4 rounded-circle img-fluid" src="{% static 'img/chicken.jpg' %}" alt="Generic placeholder image">
+                                      <p class="media-body pt-3 tm-testimonial-text text-justify">
+                                        مشخصات کامل از محصول کاشت شده در مزرعه نوع ,سن ,تعداد ,زمان ورود به مزرعه ,نژاد و مبدا
+                                        <br>
+                                        <a href="{% url 'farms:profilechicken' farm.pk %}"><i class="material-icons" style="font-size:60px;color:aquamarine;">visibility</i></a>
+                                    </p>
+                                    </div>                  
+                                </div>
+                                <div class="col-lg-6 mb-5 pt-3">
+                                    <div class="media tm-testimonial">
+                                      <img class="mr-4 col-4 rounded-circle img-fluid" src="{% static 'img/losses.jpg' %}" alt="Generic placeholder image">
+                                      <p class="media-body pt-3 tm-testimonial-text text-justify">
+                                        میزان تلفات وارد شده به محصول بصورت روزانه و با دسته بندی بیماری وخفگی وفیزیکی و توضیحات
+                                        <br>
+                                        <a href="{% url 'farms:losses' farm.pk %}"><i class="material-icons" style="font-size:60px;color:aquamarine;">visibility</i></a>
+                                      </p>
+                                    </div>                  
+                                </div>
+                                <div class="col-lg-6 mb-5 pt-3">
+                                    <div class="media tm-testimonial">
+                                      <img class="mr-4 col-4 rounded-circle img-fluid" src="{% static 'img/labratore.jpg' %}" alt="Generic placeholder image">
+                                      <p class="media-body pt-3 tm-testimonial-text text-justify">
+                                        نتایج آزمایشگاه همراه عکس و توضیحات مربوط به آن
+                                        <br>
+                                        <a href="{% url 'farms:labratores' farm.pk %}"><i class="material-icons" style="font-size:60px;color:aquamarine;">visibility</i></a>
+                                        </p>
+                                    </div>                  
+                                </div>
+                                <div class="col-lg-6 mb-5 pt-3">
+                                    <div class="media tm-testimonial">
+                                        <img href="" class="mr-4 col-4 rounded-circle img-fluid" src="{% static 'img/medecian.png' %}" alt="Generic placeholder image">
+                                        <p class="media-body pt-3 tm-testimonial-text text-justify">
+                                        بهداشت و سلامت مزرعه دسته بندی بصورت تاریخ سرکشی شامل عکس های گرفته شده و دستورالعمل های درمان
+                                        <br>
+                                        <a href="{% url 'farms:medicians' farm.pk %}"><i class="material-icons" style="font-size:60px;color:aquamarine;">visibility</i></a>
+                                    </p>
+                                    </div>                  
+                                </div>
+                                <div class="col-lg-6 mb-5 pt-3">
+                                    <div class="media tm-testimonial">
+                                      <img class="mr-4 col-4 rounded-circle img-fluid" src="{% static 'img/schedule.jpg' %}" alt="Generic placeholder image">
+                                      <p class="media-body pt-3 tm-testimonial-text text-justify">
+                                       مشاهده برنامه نوردهی به مزرعه شامل یک لیست کامل توضضیحات می باشد
+                                       <br>
+                                        <a href="{% url 'farms:schedules' farm.pk %}"><i class="material-icons" style="font-size:60px;color:aquamarine;">visibility</i></a>
+                                    </p>
+                                    </div>                  
+                                </div>
+                                <div class="col-lg-6 mb-5 pt-3">
+                                    <div class="media tm-testimonial">
+                                      <img class="mr-4 col-4 rounded-circle img-fluid" src="{% static 'img/scissor.png' %}" alt="Generic placeholder image">
+                                      <p class="media-body pt-3 tm-testimonial-text text-justify">
+                                       مک بری مزرعه شامل تاریخ شروع , تاریخ پایان و قسمت توضضیحات
+                                       <br>
+                                        <a href="{% url 'farms:make_bery' farm.pk %}"><i class="material-icons" style="font-size:60px;color:aquamarine;">visibility</i></a>
+                                    </p>
+                                    </div>                  
+                                </div>
+                                <div class="col-lg-6 mb-5 pt-3">
+                                    <div class="media tm-testimonial">
+                                      <img class="mr-4 col-4 rounded-circle img-fluid" src="{% static 'img/Function.png' %}" alt="Generic placeholder image">
+                                      <p class="media-body pt-3 tm-testimonial-text text-justify">
+                                      عملکرد مزرعه براساس تاریخ وارد شده ضریب تولید و ضریب وزن گیری
+                                      <br>
+                                        <a href="{% url 'farms:functions' farm.pk %}"><i class="material-icons" style="font-size:60px;color:aquamarine;">visibility</i></a>
+                                    </p>
+                                    </div>                  
+                                </div>
+                                <div class="col-lg-6 mb-5 pt-3">
+                                    <div class="media tm-testimonial">
+                                      <img class="mr-4 col-4 rounded-circle img-fluid" src="{% static 'img/sales.png' %}" alt="Generic placeholder image">
+                                      <p class="media-body pt-3 tm-testimonial-text text-justify">
+                                      میزان فروش مزرعه در تاریخ معین فروش تخم مرغ یا کود
+                                      <br>
+                                        <a href="{% url 'farms:incaomes' farm.pk %}"><i class="material-icons" style="font-size:60px;color:aquamarine;">visibility</i></a>
+                                    </p>
+                                    </div>                  
+                                </div>
+		                    </div>
+				        </div>
+                    </div>
+                    {% if farm.active %}
+                    <div class="col-md-2 mt-5 col-sm-12 bg-light"> 
+                        <ul style="direction: rtl; float: right;">
+                            <li  style="list-style-type:none;">
+                                <a style="float: right;" href="{% url 'farms:edit_farm' farm.pk %}"><i class="material-icons" style="font-size:60px;color:tomato;">agriculture</i> مزرعه</a>
+                            </li>
+                            <li  style="list-style-type: none;">
+                                <a style="float: right;" href="{% url 'farms:create_profilechicken' farm.pk %}"><i class="material-icons" style="font-size:50px;color:burlywood;">set_meal</i>محصول</a>
+                            </li>
+                            <li  style="list-style-type: none;">
+                                <a style="float: right;" href="{% url 'farms:create_manufacturing' farm.pk %}"><i class="material-icons" style="font-size:50px;color:blueviolet;">poll</i>تولید</a>
+                            </li>
+                            <li  style="list-style-type: none;">
+                                <a style="float: right;" href="{% url 'farms:create_vaccination' farm.pk %}"> <i class="material-icons" style="font-size:50px;color:greenyellow;">medical_services</i>واکسن</a>
+                            </li>
+                            <li style="list-style-type: none;">
+                                <a style="float: right;" href="{% url 'farms:create_medician' farm.pk %}"> <i class="material-icons" style="font-size:50px;color:rgb(71, 255, 47);">healing</i>بهداشت</a>
+                            </li>
+                            <li style="list-style-type: none;">
+                                <a style="float: right;" href="{% url 'farms:create_labratore' farm.pk %}"> <i class="material-icons" style="font-size:50px;color:blue;">local_pharmacy</i>آزمایش</a>
+                            </li>
+                            <li style="list-style-type: none;">
+                                <a style="float: right;" href="{% url 'farms:create_losse' farm.pk %}"> <i class="material-icons" style="font-size:50px;color:red;">heart_broken</i>تلفات</a>
+                            </li>
+                            <li style="list-style-type: none;">
+                                <a style="float: right;" href="{% url 'farms:create_manage' farm.pk %}"> <i class="material-icons" style="font-size:50px;color:aqua;">badge</i>مدیریت</a>
+                            </li>
+                            <li style="list-style-type: none;">
+                                <a style="float: right;" href="{% url 'farms:create_incaome' farm.pk %}"> <i class="material-icons" style="font-size:50px;color:rgb(7, 102, 26);">shopping_cart</i>فروش</a>
+                            </li>
+                            <li style="list-style-type: none;">
+                                <a style="float: right;" href="{% url 'farms:create_function' farm.pk %}"> <i class="material-icons" style="font-size:50px;color:rgb(22, 89, 189);">psychology</i>عملکرد</a>
+                            </li>
+                            <li style="list-style-type: none;">
+                                <a style="float: right;" href="{% url 'farms:create_schedule' farm.pk %}"> <i class="material-icons" style="font-size:50px;color:rgb(204, 198, 20);">restore</i>نوردهی</a>
+                            </li>
+                            <li style="list-style-type: none;">
+                                <a style="float: right;" href="{% url 'farms:create_make_bery' farm.pk %}"> <i class="material-icons" style="font-size:50px;color:rgb(255, 89, 0);">content_cut</i>مک بری</a>
+                            </li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+			</div>
+		</main>
+{% endblock %}

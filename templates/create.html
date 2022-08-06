@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load jalali_tags %}
+
+
+{% block one %}صفحه ایجاد و ویرایش {% endblock %}
+{% block tow %}همکار گرامی لطفا در وارد کردن اطلاعات دقت نمایید  {% endblock %}           	
+
+
+{% block body %}
+		<!-- Page content -->
+		<main>
+			<div class="container-fluid px-0">
+				<div class="mx-auto tm-content-container">					
+					
+                    <div class="mx-auto tm-content-container">					
+                        <div class="mx-auto tm-about-text-container ">
+                            <div class="row">
+                                <div class="col-md-3"></div>
+                                <div class="col-lg-6">
+                                    {% if formset %}
+                                        <form id="contact-form" action="" method="POST" class="tm-contact-form" enctype="multipart/form-data" novalidate>
+                                            {% csrf_token %}
+                                            {{formset.management_form}}
+                                            {% for field in formset %}
+                                                <div class="form-group">
+                                                    <label style="float: right;"> {{field.label}} </label>
+                                                    {{field}}
+                                                    {% for error in formset.errors %}
+                                                        <h5 style="float: right; color:tomato">{{ error }}</h5>
+                                                    {% endfor %}
+                                                </div>
+                                                <hr>
+                                                {% endfor %}
+                                          <div class="form-group mb-0">
+                                            <button type="submit" class="btn btn-primary rounded-0 d-block ml-auto mr-0 tm-btn-animate tm-btn-submit tm-icon-submit"><span>ثبت اطلاعات</span></button>
+                                          </div>
+                                        </form>
+                                    {% else %}
+                                        <form id="contact-form" action="" method="POST" class="tm-contact-form" enctype="multipart/form-data" novalidate>
+                                            {% csrf_token %}
+                                                {% for field in form %}
+                                                    <div class="form-group">
+                                                        <label style="float: right;"> {{field.label}} </label>
+                                                        {{field}}
+                                                        <h5 style="float: right; color:tomato">{{ field.errors }}</h5>
+                                                    </div>
+                                                    <hr>
+                                                {% endfor %}
+                                          <div class="form-group mb-0">
+                                            <button type="submit" class="btn btn-primary rounded-0 d-block ml-auto mr-0 tm-btn-animate tm-btn-submit tm-icon-submit"><span>ثبت اطلاعات</span></button>
+                                          </div>
+                                        </form>
+                                    {% endif %}    
+                                </div>
+                                
+                            </div>  
+                        </div>                                      			
+                    </div>                                    			
+				</div>
+			</div>
+		</main>
+
+{% endblock %}
